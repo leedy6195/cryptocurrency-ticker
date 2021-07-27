@@ -1,0 +1,12 @@
+spring:
+  datasource:
+    url: jdbc:h2:tcp://localhost/~/test
+    driver-class-name: org.h2.Driver
+    username: sa
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: none
+api:
+  coinmarketcap:
+    key: 8fc1ea53-93ed-457c-8b85-fd99267d4dbd
