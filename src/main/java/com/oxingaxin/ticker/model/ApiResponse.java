@@ -7,7 +7,7 @@ import java.util.Map;
 
 @Getter
 @RequiredArgsConstructor
-public abstract class ApiResponse<T> {
+public abstract class ApiResponse<T, U> {
     protected final T data;
-    protected final Map<String, Object> metadata;
+    protected final U metadata;
 }

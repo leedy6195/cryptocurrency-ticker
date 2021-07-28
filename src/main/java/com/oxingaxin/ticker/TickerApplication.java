@@ -1,5 +1,6 @@
 package com.oxingaxin.ticker;
 
+import com.oxingaxin.ticker.model.Market;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.scheduling.annotation.EnableScheduling;
@@ -20,6 +21,13 @@ public class TickerApplication {
 	@GetMapping("/hello")
 	public String hello(@RequestParam(value="name", defaultValue="World") String name) {
 		return String.format("Hello %s!", name);
+	}
+
+	@GetMapping("/ticker/{marketName}/{coinSymbol}")
+	public String ticker(
+			@PathVariable("marketName") Market market,
+			@PathVariable("coinSymbol") String coinSymbol) {
+		return "";
 	}
 	/*
 	@GetMapping("/ticker/{coinType}")

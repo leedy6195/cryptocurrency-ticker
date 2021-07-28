@@ -1,8 +1,10 @@
 package com.oxingaxin.ticker.scheduler;
 
+import com.oxingaxin.ticker.model.CryptoCurrency;
+import com.oxingaxin.ticker.model.Market;
 import com.oxingaxin.ticker.model.TickerEntity;
 import com.oxingaxin.ticker.model.coinmarketcap.CmcTickerApiResponse;
-import com.oxingaxin.ticker.model.coinmarketcap.Currency;
+import com.oxingaxin.ticker.model.Currency;
 import com.oxingaxin.ticker.repository.TickerRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -15,7 +17,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import javax.transaction.Transactional;
+import org.springframework.transaction.annotation.Transactional;
 import java.math.BigDecimal;
 
 @Component
@@ -26,20 +28,26 @@ public class CmcScheduler {
     private final RestTemplate restTemplate;
     private final TickerRepository tickerRepository;
 
-
     @Value("${api.coinmarketcap.key}")
     String apiKey;
 
-    @Scheduled(fixedRate = 10000)
-    public void schedule () {
-        String uri = "https://pro-api.coinmarketcap.com/v1/cryptocurrency/listings/latest";
+    @Scheduled(fixedRate = 1000 * 60 * 3)
+    public void cmcTickerBtc () {
+        cmcTicker(CryptoCurrency.BTC);
+    }
+
+    @Scheduled(fixedRate = 1000 * 60 * 5)
+    public void cmcTickerEth () {
+        cmcTicker(CryptoCurrency.ETH);
+    }
+
+    public void cmcTicker (CryptoCurrency cryptoCurrency) {
+        String uri = "https://pro-api.coinmarketcap.com/v1/cryptocurrency/quotes/latest";
         HttpHeaders headers = new HttpHeaders();
         headers.set("X-CMC_PRO_API_KEY", apiKey);
 
         UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(uri)
-                .queryParam("start", 1)
-                .queryParam("limit", 2)
-                .queryParam("convert", "USD");
+                .queryParam("id", cryptoCurrency.getCmcId());
 
         HttpEntity<?> request = new HttpEntity<>(headers);
 
@@ -50,6 +58,19 @@ public class CmcScheduler {
                 new ParameterizedTypeReference<CmcTickerApiResponse>() {}
         ).getBody();
 
+        tickerRepository.save(
+                TickerEntity.builder()
+                        .market(Market.CMC)
+                        .name(cmcTickerApiResponse.getData().get(cryptoCurrency).getName())
+                        .symbol(cmcTickerApiResponse.getData().get(cryptoCurrency).getSymbol())
+                        .slug(cmcTickerApiResponse.getData().get(cryptoCurrency).getSlug())
+                        .priceUsd(BigDecimal.valueOf(cmcTickerApiResponse.getData().get(cryptoCurrency).getQuote().get(Currency.USD).getPrice()))
+                        .priceKrw(BigDecimal.ZERO)
+                        .lastUpdated(cmcTickerApiResponse.getData().get(cryptoCurrency).getLastUpdated())
+                        .build()
+        );
+
+
         /*
         String response = restTemplate.exchange(
                 builder.toUriString(),
@@ -57,15 +78,10 @@ public class CmcScheduler {
                 request,
                 String.class
         ).getBody();
+
          */
-        tickerRepository.save(
-                TickerEntity.builder()
-                        .name(cmcTickerApiResponse.getData().get(1).getName())
-                        .symbol(cmcTickerApiResponse.getData().get(1).getSymbol())
-                        .slug(cmcTickerApiResponse.getData().get(1).getSlug())
-                        .priceUsd(BigDecimal.valueOf(cmcTickerApiResponse.getData().get(1).getQuote().get(Currency.USD).getPrice()))
-                        .build()
-        );
+
+
 
     }
 }
