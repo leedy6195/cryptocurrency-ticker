@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
+import java.util.Optional;
 
 @Repository
 @RequiredArgsConstructor
@@ -20,11 +21,13 @@ public class JpaTickerRepository implements TickerRepository {
     }
 
     @Override
-    public TickerEntity findByMarketAndSymbol(Market market, String symbol) {
+    public Optional<TickerEntity> findByMarketAndSymbol(Market market, String symbol) {
+
         return em.createQuery(
-                "select top 1 t from Ticker t where t.market = :market and " +
+                "select t from TickerEntity t where t.market = :market and " +
                 "t.symbol = :symbol  order by created desc", TickerEntity.class)
+                .setParameter("market", market)
                 .setParameter("symbol", symbol)
-                .getSingleResult();
+                .getResultList().stream().findFirst();
     }
 }
