@@ -7,6 +7,9 @@ spring:
     show-sql: true
     hibernate:
       ddl-auto: none
+  jackson:
+    mapper:
+      accept-case-insensitive-enums: true
 api:
   coinmarketcap:
     key: 8fc1ea53-93ed-457c-8b85-fd99267d4dbd
