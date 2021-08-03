@@ -28,6 +28,6 @@ public class TickerController {
     public TickerEntity getTicker(
             @PathVariable("marketName") Market market,
             @PathVariable("coinSymbol") String coinSymbol) {
-        return tickerRepository.findByMarketAndSymbol(market, coinSymbol).orElseThrow(null);
+        return tickerRepository.findFirstByMarketAndSymbolOrderByCreatedDesc(market, coinSymbol).orElseThrow(null);
     }
 }

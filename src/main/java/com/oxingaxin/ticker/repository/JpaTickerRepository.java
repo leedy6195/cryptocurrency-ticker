@@ -8,7 +8,7 @@ import org.springframework.stereotype.Repository;
 import javax.persistence.EntityManager;
 import java.util.Optional;
 
-@Repository
+
 @RequiredArgsConstructor
 public class JpaTickerRepository implements TickerRepository {
 
@@ -21,7 +21,7 @@ public class JpaTickerRepository implements TickerRepository {
     }
 
     @Override
-    public Optional<TickerEntity> findByMarketAndSymbol(Market market, String symbol) {
+    public Optional<TickerEntity> findFirstByMarketAndSymbolOrderByCreatedDesc(Market market, String symbol) {
 
         return em.createQuery(
                 "select t from TickerEntity t where t.market = :market and " +
