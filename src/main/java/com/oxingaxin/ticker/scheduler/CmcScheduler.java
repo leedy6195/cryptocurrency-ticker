@@ -31,12 +31,12 @@ public class CmcScheduler {
     @Value("${api.coinmarketcap.key}")
     String apiKey;
 
-    @Scheduled(fixedRate = 1000 * 60 * 3)
+    //@Scheduled(fixedRate = 1000 * 60 * 3)
     public void cmcTickerBtc () {
         cmcTicker(CryptoCurrency.BTC);
     }
 
-    @Scheduled(fixedRate = 1000 * 60 * 5)
+    //@Scheduled(fixedRate = 1000 * 60 * 5)
     public void cmcTickerEth () {
         cmcTicker(CryptoCurrency.ETH);
     }

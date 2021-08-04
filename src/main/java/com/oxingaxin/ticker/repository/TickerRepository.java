@@ -8,5 +8,5 @@ import java.util.Optional;
 public interface TickerRepository {
     TickerEntity save(TickerEntity tickerEntity);
 
-    Optional<TickerEntity> findFirstByMarketAndSymbolOrderByCreatedDesc(Market market, String symbol);
+    Optional<TickerEntity> findFirstByMarketAndSymbolIgnoreCaseOrderByCreatedDesc(Market market, String symbol);
 }

@@ -26,7 +26,7 @@ public class BithumbScheduler {
     private final RestTemplate restTemplate;
     private final TickerRepository tickerRepository;
 
-    @Scheduled(fixedRate = 1000 * 60 * 3)
+    //@Scheduled(fixedRate = 1000 * 60 * 3)
     public void bithumbTickerEth() {
         bithumbTicker(CryptoCurrency.ETH);
     }
