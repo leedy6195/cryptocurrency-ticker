@@ -1,8 +1,8 @@
 # ticker
 
 ## 기능
-+ 거래소별 coin ticker API 호출, 저장 스케줄링
-+ [GET] /ticker/{market}/{coinType} API 제공 
++ 거래소별 ticker API fetch & insert 스케줄링
++ [GET] /ticker/{market}/{coinType} API 서비스 제공
 
 ---
 
